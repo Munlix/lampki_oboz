@@ -1,0 +1,357 @@
+/* --- OGÓLNE STYLE DLA CAŁEJ STRONY I KONTENERA --- */
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #2c3e50; /* Ciemne tło */
+    color: #ecf0f1; /* Jasny tekst */
+    flex-direction: column;
+    overflow-x: hidden; /* Zapobiega poziomemu przewijaniu */
+}
+
+.container {
+    background-color: #34495e; /* Ciemniejszy kontener */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 90%;
+    max-width: 650px; /* Nieznacznie zwiększono max-width kontenera */
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #f1c40f;
+    margin-bottom: 15px;
+    font-size: 2.4em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.goal {
+    font-style: italic;
+    margin-bottom: 25px;
+    color: #bdc3c7;
+    font-size: 1.2em;
+}
+
+/* --- GRID DLA LAMPEK --- */
+.lamps-grid {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Wyrównanie do dołu, aby gwinty były na tej samej linii */
+    gap: 25px; /* Zwiększony odstęp, ale będziemy go zmniejszać w media queries */
+    margin-bottom: 35px;
+    flex-wrap: nowrap; /* WAŻNE: Nadal zapobiega zawijaniu lampek na nową linię */
+    /* Usunięto overflow-x: auto; - będziemy polegać na responsywnym zmniejszaniu */
+}
+
+/* --- GŁÓWNE STYLE DLA POJEDYNCZEJ LAMPKI (BUTTON) --- */
+.lamp {
+    /* Rozmiar przycisku, który będzie otaczał żarówkę */
+    width: 90px;
+    height: 120px; /* Wysokość przycisku, aby pomieścić żarówkę i gwint */
+    background: transparent; /* Przycisk jest przezroczysty */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    position: relative; /* Ważne dla pozycjonowania pseudo-elementów */
+    padding: 0; /* Usuń domyślny padding przycisku */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Wyrównanie do dołu */
+    align-items: center;
+    flex-shrink: 0; /* Zapobiega zmniejszaniu się przycisku poniżej jego width/height */
+}
+
+/* --- STYL DLA BAŃKI ŻARÓWKI (GŁÓWNY KSZTAŁT) --- */
+.lamp::before {
+    content: '';
+    position: absolute;
+    top: 0; /* Start na górze przycisku */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px; /* Szerokość bańki */
+    height: 90px; /* Wysokość bańki */
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Kształt żarówki */
+    background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%), /* Odblask */
+                radial-gradient(circle at 30% 70%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 60%), /* Cień */
+                #777; /* Bazowy szary kolor zgaszonej bańki */
+    box-shadow: 0 0 10px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.3);
+    border: 2px solid #555;
+    transition: all 0.3s ease-in-out;
+     pointer-events: none;
+    z-index: 1; /* Upewnij się, że bańka jest pod tekstem */
+}
+
+/* --- STYL DLA GWINTU ŻARÓWKI --- */
+.lamp::after {
+    content: '';
+    position: absolute;
+    bottom: 0; /* Start na dole przycisku */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; /* Szerokość gwintu */
+    height: 30px; /* Wysokość gwintu */
+    background: repeating-linear-gradient(
+        to bottom,
+        #444,
+        #444 4px,
+        #666 4px,
+        #666 8px
+    ); /* Efekt prążków gwintu */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    pointer-events: none;
+    z-index: 0; /* Gwint za bańką */
+}
+
+/* --- TEKST L1, L2 ETC. W LAMPKACH (span wewnątrz buttona) --- */
+.lamp span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #eee; /* Kolor tekstu dla zgaszonej lampki */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 2; /* Upewnij się, że tekst jest na wierzchu */
+}
+
+/* --- EFEKT HOVER (NAJECHANIA) DLA CAŁEJ LAMPKI --- */
+.lamp:hover {
+    transform: translateY(-5px); /* Delikatne uniesienie */
+}
+
+/* --- STYL DLA ŚWIECĄCEJ LAMPKI (STANDARDOWO ŻÓŁTA) --- */
+.lamp.on::before {
+    background: radial-gradient(circle at 50% 50%, #fff 0%, #ffdaa3 30%, #f1c40f 70%, #c29d0c 100%); /* Żółty gradient żarzący */
+    box-shadow: 0 0 50px #f1c40f, inset 0 0 20px #ffeaa7; /* Silna poświata */
+    border-color: #f1c40f;
+}
+.lamp.on span {
+    color: #333; /* Ciemniejszy tekst na świecącej żarówce */
+    text-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* --- SPECJALNY STYL DLA L3 GDY TYLKO ONA ŚWIECI (STAN ZWYCIĘSTWA - ZIELONA) --- */
+#L3.on.win-state::before {
+    background: radial-gradient(circle at 50% 50%, #fff 0%, #a2ffb3 30%, #2ecc71 70%, #1f8b4d 100%); /* Zielony gradient żarzący */
+    box-shadow: 0 0 60px #2ecc71, inset 0 0 25px #bdf5cf; /* Jeszcze silniejsza zielona poświata */
+    border-color: #2ecc71;
+}
+#L3.on.win-state span {
+    color: #fff; /* Biały tekst na zielonej żarówce */
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* --- STYLE DLA WYŚWIETLANIA STATUSU --- */
+.status-display {
+    background-color: #2c3e50;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 25px;
+    border: 1px solid #5d6d7e;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+#current-status {
+    font-size: 1.15em;
+    margin-bottom: 15px;
+}
+
+#lamp-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#lamp-list li {
+    background-color: #3f556e;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 1.05em;
+    color: #ecf0f1;
+    border: 1px solid #4a627d;
+}
+
+#message {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #e74c3c;
+    min-height: 25px;
+    font-size: 1.2em;
+}
+
+#message.win {
+    color: #2ecc71;
+    text-shadow: 0 0 8px rgba(46, 204, 113, 0.8);
+}
+
+/* --- STYLE DLA PRZYCISKU RESETU --- */
+#reset-button {
+    background-color: #3498db;
+    color: white;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.3em;
+    margin-top: 30px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+#reset-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 12px rgba(0, 0, 0, 0.4);
+}
+
+#reset-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------------------------------------------------- */
+/* MEDIA QUERIES DLA RESPONSYWNOŚCI (dostosowanie rozmiarów na mniejszych ekranach) */
+/* Celem jest utrzymanie lampek w jednej linii i zachowanie estetyki. */
+/* ---------------------------------------------------- */
+
+/* Dla ekranów o szerokości do 650px (drobne dostosowania) */
+@media (max-width: 650px) {
+    .lamps-grid {
+        gap: 18px; /* Nieco mniejszy odstęp */
+    }
+    .lamp {
+        width: 85px; /* Delikatne zmniejszenie całego obszaru przycisku */
+        height: 115px;
+    }
+    .lamp::before {
+        width: 75px;
+        height: 85px;
+    }
+    .lamp::after {
+        width: 28px;
+        height: 28px;
+    }
+    .lamp span {
+        font-size: 1.5em;
+    }
+}
+
+/* Dla ekranów o szerokości do 550px (typowe tablety/duże smartfony) */
+@media (max-width: 550px) {
+    .lamps-grid {
+        gap: 15px; /* Zmniejszony odstęp */
+    }
+    .lamp {
+        width: 78px;
+        height: 105px;
+    }
+    .lamp::before {
+        width: 68px;
+        height: 78px;
+    }
+    .lamp::after {
+        width: 25px;
+        height: 25px;
+    }
+    .lamp span {
+        font-size: 1.3em;
+    }
+    .container {
+        padding: 25px;
+    }
+}
+
+/* Dla ekranów o szerokości do 480px (większość smartfonów w pionie) */
+@media (max-width: 480px) {
+    .lamps-grid {
+        gap: 12px; /* Dalsze zmniejszenie odstępów */
+    }
+    .lamp {
+        width: 70px;
+        height: 98px;
+    }
+    .lamp::before {
+        width: 60px;
+        height: 70px;
+    }
+    .lamp::after {
+        width: 22px;
+        height: 22px;
+    }
+    .lamp span {
+        font-size: 1.2em;
+    }
+    h1 {
+        font-size: 2.2em;
+    }
+}
+
+/* Dla ekranów o szerokości do 400px (małe smartfony) */
+@media (max-width: 400px) {
+    .lamps-grid {
+        gap: 8px; /* Jeszcze mniejsze odstępy */
+    }
+    .lamp {
+        width: 60px; /* Zmniejszenie do 60px szerokości, aby zmieścić 5 sztuk */
+        height: 88px;
+    }
+    .lamp::before {
+        width: 52px;
+        height: 60px;
+    }
+    .lamp::after {
+        width: 18px;
+        height: 18px;
+    }
+    .lamp span {
+        font-size: 1em;
+    }
+    .container {
+        padding: 20px;
+    }
+    #reset-button {
+        padding: 12px 25px;
+        font-size: 1.2em;
+    }
+}
+
+/* Dla bardzo małych ekranów (poniżej 350px) - tutaj będzie naprawdę ciasno */
+@media (max-width: 350px) {
+    .lamps-grid {
+        gap: 5px; /* Minimalne odstępy */
+    }
+    .lamp {
+        width: 55px; /* Bardzo małe lampki */
+        height: 80px;
+    }
+    .lamp::before {
+        width: 48px;
+        height: 55px;
+    }
+    .lamp::after {
+        width: 15px;
+        height: 15px;
+    }
+    .lamp span {
+        font-size: 0.9em;
+    }
+    .container {
+        padding: 15px;
+    }
+    #reset-button {
+        font-size: 1.1em;
+        padding: 10px 20px;
+    }
+}

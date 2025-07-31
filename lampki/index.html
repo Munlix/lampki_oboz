@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra w Lampki Obozowe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gra w Lampki</h1>
+        <p class="goal">Cel: Zaświeć tylko środkową lampkę (L3)!</p>
+        
+        <div class="lamps-grid">
+            <button class="lamp" id="L1" data-lamp="L1"><span>L1</span></button>
+            <button class="lamp" id="L2" data-lamp="L2"><span>L2</span></button>
+            <button class="lamp" id="L3" data-lamp="L3"><span>L3</span></button>
+            <button class="lamp" id="L4" data-lamp="L4"><span>L4</span></button>
+            <button class="lamp" id="L5" data-lamp="L5"><span>L5</span></button>
+        </div>
+
+        <div class="status-display">
+            <p id="current-status">Stan lampek:</p>
+            <ul id="lamp-list">
+                <li>L1: ZGASZONA</li>
+                <li>L2: ZGASZONA</li>
+                <li>L3: ZGASZONA</li>
+                <li>L4: ZGASZONA</li>
+                <li>L5: ZGASZONA</li>
+            </ul>
+            <p id="message"></p>
+        </div>
+
+        <button id="reset-button">Zacznij od nowa</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
